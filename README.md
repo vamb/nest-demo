@@ -1,3 +1,4 @@
+###这个项目是对照官方英文文档的个人练习项目，记录于此谨防时间过久忘记
 <p align="center">
   <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
 </p>
