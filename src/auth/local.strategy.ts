@@ -9,13 +9,15 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
     super();
   }
 
+  // 这个方法会被调用
   async validate(username: string, password: string): Promise<any> {
-    console.log('111')
+    // console.log('111')
     const user = await this.authService.validateUser(username, password)
-    console.log('222', user)
+    // console.log('222', user)
     if(!user){
       throw new UnauthorizedException()
     }
     return user
   }
+
 }

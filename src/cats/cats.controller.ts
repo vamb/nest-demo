@@ -1,6 +1,6 @@
 import { Controller, Get, Post, HttpCode, Body, Query,
     HttpStatus, Header, Param, Res, Req, HttpException,
-  ForbiddenException,
+  ForbiddenException, UseGuards,
   // ParseIntPipe,
   UsePipes } from '@nestjs/common';
 import { CreateCatDto } from './dto/create-cat.dto'
@@ -9,6 +9,7 @@ import { CustomerService } from "../customer/customer.service";
 import { JoiValidationPipe } from "../common/JoiValidation.pipe";
 import { ValidationPipe } from "../common/validation.pipe";
 import { ParseIntPipe } from '../common/parseInt.pipe'
+import { JwtAuthGuard } from "../auth/jwt-auth.guard";
 
 @Controller('cats')
 export class CatsController {
@@ -27,6 +28,7 @@ export class CatsController {
       })
     }
 
+    @UseGuards(JwtAuthGuard)
     @Get('all')
     @HttpCode(HttpStatus.OK)
     all() {
