@@ -7,9 +7,11 @@ import { LoggerMiddleware } from "./common/logger.middleware";
 import { APP_PIPE } from '@nestjs/core'
 // import { ValidationPipe } from "./common/validation.pipe";
 import { ParseIntPipe } from './common/parseInt.pipe'
+import { AuthModule } from './auth/auth.module';
+import { UsersModule } from './users/users.module';
 
 @Module({
-  imports: [CustomerModule, CatModule],
+  imports: [CustomerModule, CatModule, AuthModule, UsersModule],
   controllers: [AppController],
   providers: [
     {
