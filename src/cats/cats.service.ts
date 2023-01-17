@@ -13,7 +13,7 @@ export class CatsService {
     return `This action returns all cats`;
   }
 
-  findOne(id: string) {
+  findOne(id: number) {
     return {
       id: id,
       name: 'catName1',

@@ -1,9 +1,14 @@
 import { Controller, Get, Post, HttpCode, Body, Query,
     HttpStatus, Header, Param, Res, Req, HttpException,
-  ForbiddenException } from '@nestjs/common';
+  ForbiddenException,
+  // ParseIntPipe,
+  UsePipes } from '@nestjs/common';
 import { CreateCatDto } from './dto/create-cat.dto'
 import { CatsService } from "./cats.service";
 import { CustomerService } from "../customer/customer.service";
+import { JoiValidationPipe } from "../common/JoiValidation.pipe";
+import { ValidationPipe } from "../common/validation.pipe";
+import { ParseIntPipe } from '../common/parseInt.pipe'
 
 @Controller('cats')
 export class CatsController {
@@ -54,24 +59,27 @@ export class CatsController {
     }
 
     @Get('find/:id')
-    findOne(@Param('id') id: string, @Res() resp){
-        const rest = this.catsService.findOne(id)
-        const customer = this.customerService.findOne(+id)
-        resp.status(HttpStatus.OK).send(
-          {
-            data: {
-              catObj: rest,
-              customerObj: customer
-            }
+    // findOne(@Param('id', ParseIntPipe) id: number, @Res() resp){
+    findOne(@Param('id', new ParseIntPipe()) id, @Res() resp){
+    // findOne(@Param('id') id, @Res() resp){
+      console.log('findOne method called at controller')
+      const rest = this.catsService.findOne(id)
+      const customer = this.customerService.findOne(+id)
+      resp.status(HttpStatus.OK).send(
+        {
+          data: {
+            catObj: rest,
+            customerObj: customer
           }
-        )
+        }
+      )
     }
 
+    // 单独为某个方法指定入参验证
+    // @nestjs/common 有自己的ValidationPipe()，效果差不多，也挺好用的
     @Post('create')
     @Header('Cache-Control', 'none')
-    create(@Body() createCatDto: CreateCatDto, @Res() resp) {
-        resp.status(HttpStatus.OK).send(
-          { data: createCatDto }
-        )
+    async create(@Body(new ValidationPipe()) createCatDto: CreateCatDto) {
+      return this.catsService.create(createCatDto)
     }
 }
