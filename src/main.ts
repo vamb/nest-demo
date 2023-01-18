@@ -1,6 +1,6 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { RolesGuard } from "./common/role.guard";
+import { RolesGuard } from "./common/guard/role.guard";
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);

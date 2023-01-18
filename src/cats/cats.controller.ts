@@ -1,21 +1,38 @@
-import { Controller, Get, Post, HttpCode, Body, Query,
-    HttpStatus, Header, Param, Res, Req, HttpException,
-  ForbiddenException, UseGuards, SetMetadata,
-  // ParseIntPipe,
-  UsePipes } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Header,
+  HttpCode,
+  HttpException,
+  HttpStatus,
+  Param,
+  Post,
+  Query,
+  Req,
+  Res,
+  SetMetadata,
+  UseGuards,
+  UseInterceptors
+} from '@nestjs/common';
 import { CreateCatDto } from './dto/create-cat.dto'
 import { CatsService } from "./cats.service";
 import { CustomerService } from "../customer/customer.service";
-import { JoiValidationPipe } from "../common/JoiValidation.pipe";
-import { ValidationPipe } from "../common/validation.pipe";
-import { ParseIntPipe } from '../common/parseInt.pipe'
+import { ValidationPipe } from "../common/pipe/validation.pipe";
+import { ParseIntPipe } from '../common/pipe/parseInt.pipe'
 import { JwtAuthGuard } from "../auth/jwt-auth.guard";
-import { Roles } from "../common/roles.decorator";
+import { Roles } from "../common/decorator/roles.decorator";
 // import { RolesGuard } from "../common/role.guard";
+import { LoggingInterceptor } from "../common/interceptor/logging.interceptor";
+import { TimeoutInterceptor } from "../common/interceptor/timeout.interceptor";
+import { RoleEnums } from "../common/enum/role.enums";
+import { RolesGuard } from "../common/guard/role.guard";
 
 @Controller('cats')
 // @UseGuards(RolesGuard) //这个是controller级别的Guard调用
 @UseGuards(JwtAuthGuard)
+@UseInterceptors(TimeoutInterceptor)
+@UseInterceptors(LoggingInterceptor)
 export class CatsController {
   constructor(
     private readonly catsService: CatsService,
@@ -94,6 +111,8 @@ export class CatsController {
   // @nestjs/common 有自己的ValidationPipe()，效果差不多，也挺好用的
   @Post('create')
   @Header('Cache-Control', 'none')
+  @Roles(RoleEnums.Admin)
+  @UseGuards(RolesGuard)
   async create(@Body(new ValidationPipe()) createCatDto: CreateCatDto) {
     return this.catsService.create(createCatDto)
   }

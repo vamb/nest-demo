@@ -4,13 +4,15 @@ import { AppService } from './app.service';
 import { CustomerModule } from './customer/customer.module';
 import { CatModule } from "./cats/cat.module";
 import { LoggerMiddleware } from "./common/logger.middleware";
-import { APP_PIPE, APP_GUARD } from '@nestjs/core'
+import { APP_PIPE, APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core'
 // import { ValidationPipe } from "./common/validation.pipe";
-import { ParseIntPipe } from './common/parseInt.pipe'
+import { ParseIntPipe } from './common/pipe/parseInt.pipe'
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
-import { RolesGuard } from "./common/role.guard";
+import { RolesGuard } from "./common/guard/role.guard";
 import { JwtAuthGuard } from "./auth/jwt-auth.guard";
+import { LoggingInterceptor } from "./common/interceptor/logging.interceptor";
+import { TimeoutInterceptor } from "./common/interceptor/timeout.interceptor";
 
 @Module({
   imports: [CustomerModule, CatModule, AuthModule, UsersModule],
@@ -32,6 +34,14 @@ import { JwtAuthGuard } from "./auth/jwt-auth.guard";
     //   provide: APP_GUARD,
     //   useClass: JwtAuthGuard, // 这样就把所有的controller都包成jwt比验证的模式, 不过login方法也会check JWT导致用户无法登录
     // },
+    // {
+    //   provide: APP_INTERCEPTOR,
+    //   useClass: LoggingInterceptor
+    // },
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: TimeoutInterceptor
+    },
     AppService
   ],
 })

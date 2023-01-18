@@ -4,6 +4,8 @@ import { LocalAuthGuard } from "./auth/local-auth.guard";
 import { AppService } from './app.service';
 import { AuthGuard } from "@nestjs/passport";
 import { AuthService } from "./auth/auth.service";
+import { CustomerUser } from "./common/decorator/customer-user.decorator";
+import { UserDto } from "./users/dto/user.dto";
 
 @Controller()
 export class AppController {
@@ -11,6 +13,11 @@ export class AppController {
     private readonly appService: AppService,
     private authService: AuthService
   ) {}
+
+  @Get('findOne')
+  async findOne(@CustomerUser() user: UserDto) {
+    return user
+  }
 
   @Get()
   getHello(): string {
