@@ -15,6 +15,7 @@ import { Roles } from "../common/roles.decorator";
 
 @Controller('cats')
 // @UseGuards(RolesGuard) //这个是controller级别的Guard调用
+@UseGuards(JwtAuthGuard)
 export class CatsController {
   constructor(
     private readonly catsService: CatsService,
@@ -41,7 +42,6 @@ export class CatsController {
     })
   }
 
-  @UseGuards(JwtAuthGuard)
   @Get('all')
   @HttpCode(HttpStatus.OK)
   all() {

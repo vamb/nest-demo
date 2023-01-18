@@ -24,10 +24,10 @@ import { JwtAuthGuard } from "./auth/jwt-auth.guard";
     //   provide: APP_PIPE,
     //   useClass: ParseIntPipe // 全局定义多个
     // },
-    {
-      provide: APP_GUARD,
-      useClass: RolesGuard, // 这个是定义全局的guard, (Interesting, 这里居然啥都可以定义)
-    },
+    // {
+    //   provide: APP_GUARD,
+    //   useClass: RolesGuard, // 这个是定义全局的guard, (Interesting, 这里居然啥都可以定义)
+    // },
     // {
     //   provide: APP_GUARD,
     //   useClass: JwtAuthGuard, // 这样就把所有的controller都包成jwt比验证的模式, 不过login方法也会check JWT导致用户无法登录
